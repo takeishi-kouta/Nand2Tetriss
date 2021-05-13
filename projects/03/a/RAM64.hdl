@@ -8,7 +8,7 @@
  * stored at the memory location specified by address. If load==1, then 
  * the in value is loaded into the memory location specified by address 
  * (the loaded value will be emitted to out from the next time step onward).
- */
+ */ 
 
 CHIP RAM64 {
     IN in[16], load, address[6];
@@ -16,4 +16,18 @@ CHIP RAM64 {
 
     PARTS:
     // Put your code here:
+    //トーナメント方式を再帰的にとっていくかんじ
+    //下位3bitがRAM8内のレジスタを指定する
+    RAM8(in=in, load=RAM8ld0, address=address[0..2], out=RAM8out0);
+    RAM8(in=in, load=RAM8ld1, address=address[0..2], out=RAM8out1);
+    RAM8(in=in, load=RAM8ld2, address=address[0..2], out=RAM8out2);
+    RAM8(in=in, load=RAM8ld3, address=address[0..2], out=RAM8out3);
+    RAM8(in=in, load=RAM8ld4, address=address[0..2], out=RAM8out4);
+    RAM8(in=in, load=RAM8ld5, address=address[0..2], out=RAM8out5);
+    RAM8(in=in, load=RAM8ld6, address=address[0..2], out=RAM8out6);
+    RAM8(in=in, load=RAM8ld7, address=address[0..2], out=RAM8out7);
+    
+    //DMuxから作っていくと分かりやすいかも
+    DMux8Way(in=load, sel=address[3..5], a=RAM8ld0, b=RAM8ld1, c=RAM8ld2, d=RAM8ld3, e=RAM8ld4, f=RAM8ld5, g=RAM8ld6, h=RAM8ld7);
+    Mux8Way16(a=RAM8out0, b=RAM8out1, c=RAM8out2, d=RAM8out3, e=RAM8out4, f=RAM8out5, g=RAM8out6, h=RAM8out7, sel=address[3..5], out=out);
 }

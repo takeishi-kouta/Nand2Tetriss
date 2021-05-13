@@ -42,5 +42,31 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+    // Put you code here:
+
+    //nxとzxによる処理,マルチプレクサでif文処理する
+    Mux16(a=x, b=false, sel=zx, out=xout0);
+    Not16(in=xout0, out=x16out);
+    Mux16(a=xout0, b=x16out, sel=nx, out=xout1);
+
+    //yも同様
+    Mux16(a=y, b=false, sel=zy, out=yout0);
+    Not16(in=yout0, out=y16out);
+    Mux16(a=yout0, b=y16out, sel=ny, out=yout1);
+
+    And16(a=xout1, b=yout1, out=calc0);
+    Add16(a=xout1, b=yout1, out=calc1);
+    Mux16(a=calc0, b=calc1, sel=f, out=out0);
+
+    Not16(in=out0, out=outNot);
+    //outを分岐させる時はこんな感じで書く.分かりにくすぎる！！
+    Mux16(a=out0, b=outNot, sel=no, out[0..7]=outMux0,out[8..15]=outMux1,out[15]=ng,out=out);
+
+    //上下8bitごとにOr演算して最後にNorを計算
+    //Or8way(in=out[0..7],b=...)みたいな使い方はできないので注意.エミュレータでエラーが出る.
+    //配列を表す場合は[少ない..多い]で書く
+    Or8Way(in=outMux0, out=outOr0);
+    Or8Way(in=outMux1, out=outOr1);
+    Or(a=outOr0, b=outOr1, out=zrbar);
+    Not(in=zrbar, out=zr); 
 }

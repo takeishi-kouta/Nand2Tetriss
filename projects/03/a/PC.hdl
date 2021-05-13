@@ -11,10 +11,18 @@
  * else                    out[t+1] = out[t]
  */
 
+//レジスタを使うって書いてあったが無理だったので16bitのDFFを使った
+//本のタイミングチャートを見るとresetが最優先、次点でld,最後にインクリメントなので、DFFの近くからリセット、LD、INCのMUXを設置していけばOK
+
 CHIP PC {
     IN in[16],load,inc,reset;
     OUT out[16];
 
     PARTS:
     // Put your code here:
+    DFF16(in=legin, out=out,out=feedback);
+    Mux16(a=ldout, b=false, sel=reset, out=legin);
+    Mux16(a=Addout, b=in, sel=load, out=ldout);
+    Mux(a=false, b=true, sel=inc, out=sum);
+    Add16(a[0]=sum, b=feedback, out=Addout);
 }
