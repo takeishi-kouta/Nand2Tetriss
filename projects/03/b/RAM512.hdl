@@ -16,4 +16,15 @@ CHIP RAM512 {
 
     PARTS:
     // Put your code here:
+    //xxx yyy zzz -> RAM512,RAM64,RAM8の順
+    DMux8Way(in=load, sel=address[6..8], a=RAM0, b=RAM1, c=RAM2, d=RAM3, e=RAM4, f=RAM5, g=RAM6, h=RAM7);
+    RAM64(in=in, load=RAM0, address=address[0..5], out=RAMout0);
+    RAM64(in=in, load=RAM1, address=address[0..5], out=RAMout1);
+    RAM64(in=in, load=RAM2, address=address[0..5], out=RAMout2);
+    RAM64(in=in, load=RAM3, address=address[0..5], out=RAMout3);
+    RAM64(in=in, load=RAM4, address=address[0..5], out=RAMout4);
+    RAM64(in=in, load=RAM5, address=address[0..5], out=RAMout5);
+    RAM64(in=in, load=RAM6, address=address[0..5], out=RAMout6);
+    RAM64(in=in, load=RAM7, address=address[0..5], out=RAMout7);
+    Mux8Way16(a=RAMout0, b=RAMout1, c=RAMout2, d=RAMout3, e=RAMout4, f=RAMout5, g=RAMout6, h=RAMout7, sel=address[6..8], out=out);
 }

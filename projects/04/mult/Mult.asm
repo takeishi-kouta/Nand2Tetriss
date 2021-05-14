@@ -10,3 +10,18 @@
 // R0 >= 0, R1 >= 0, and R0*R1 < 32768.
 
 // Put your code here.
+
+
+    @mult
+    M=0 //データメモリ->Mと省略
+
+(LOOP)
+    //R0回R1をmultに加算する
+    @R1
+    D=M
+
+    @mult
+    D=D+A
+
+
+
